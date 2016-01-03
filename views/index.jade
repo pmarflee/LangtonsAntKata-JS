@@ -1,0 +1,20 @@
+extends layout
+
+block content
+  h1= title
+  canvas#canvas
+  div#counter
+  script(src="/javascripts/ant.js")
+  script.
+    var canvas = document.getElementById("canvas"),
+        counter = document.getElementById("counter"),
+        grid = new Grid(canvas, 1200, 800, 10, "green"),
+        ant = new Ant(grid)            
+        updateAnt = function () {
+          ant.move();
+          counter.innerHTML = ant.iterations + " iterations";
+          if (ant.x < 0 || ant.y < 0) {
+            clearInterval(timerId);
+          }
+        },         
+        timerId = setInterval(updateAnt, 1);
