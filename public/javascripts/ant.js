@@ -5,14 +5,15 @@ var directions = {
     W: 3 };
     
 var colours = {
-    black: "black",
-    white: "white",
-    red: "red" };
+    black: ["black", 0, 0, 0],
+    white: ["white", 255, 255, 255],
+    red: ["red", 255, 0, 0],
+    green: ["green", 0, 128, 0] };
 
 var Grid = function (canvas, width, height, pixelSize, fillColour, antColour) {
     if (width) canvas.width = width;
     if (height) canvas.height = height;    
-	this.canvas = canvas;     
+	  this.canvas = canvas;     
     this.ctx = canvas.getContext("2d");
     this.pixelSize = pixelSize || 1;
     this.fillColour = fillColour || colours.white;   
@@ -21,17 +22,17 @@ var Grid = function (canvas, width, height, pixelSize, fillColour, antColour) {
 } 
 Grid.prototype = {
     initialise: function () {
-        this.fill(this.getWidth(), this.getHeight(), colours.black, 0, 0)         
+        this.fill(this.getWidth(), this.getHeight(), colours.black[0], 0, 0)         
     }, 
     getPosition: function (value) {
         return value * this.pixelSize;
     },
     fill: function (width, height, colour, x, y) {
-        this.ctx.fillStyle = colour;
+        this.ctx.fillStyle = colour[0];
         this.ctx.fillRect(this.getPosition(x), this.getPosition(y), 
             width, height);
     },    
-	getWidth: function () {
+	  getWidth: function () {
         return this.canvas.width;
     },
     getHeight: function () {
@@ -40,10 +41,10 @@ Grid.prototype = {
     isPixelMarked: function (x, y) {
         var data = this.ctx.getImageData(
             this.getPosition(x), this.getPosition(y), 1, 1).data;
-            
-        return data[0] !== 0 ||
-               data[1] !== 0 ||
-               data[2] !== 0; 
+                    
+        return data[0] === this.fillColour[1] &&
+               data[1] === this.fillColour[2] &&
+               data[2] === this.fillColour[3]; 
     },
     fillPixel: function (x, y, colour) {
         this.fill(this.pixelSize, this.pixelSize, colour, x, y); 
@@ -85,7 +86,7 @@ Ant.prototype = {
         var isPixelMarked = this.grid.isPixelMarked(this.x, this.y),
             adjustment = isPixelMarked ? 1 : 3;
         
-        this.currentPixelColour = isPixelMarked ? this.pixelColour : colours.black;
+        this.currentPixelColour = isPixelMarked ? this.grid.fillColour : colours.black;
         this.direction = (this.direction + adjustment) % 4;  
         this.draw();   
         this.iterations++;            
