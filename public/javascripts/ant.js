@@ -22,7 +22,7 @@ var Grid = function (canvas, width, height, pixelSize, fillColour, antColour) {
 } 
 Grid.prototype = {
     initialise: function () {
-        this.fill(this.getWidth(), this.getHeight(), colours.black[0], 0, 0)         
+        this.fill(this.getWidth(), this.getHeight(), colours.black, 0, 0)         
     }, 
     getPosition: function (value) {
         return value * this.pixelSize;
